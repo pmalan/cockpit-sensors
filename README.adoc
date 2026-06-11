@@ -1,0 +1,172 @@
+= cockpit-sensors
+
+A cockpit-ws plugin that displays hardware sensor readings (temperature, voltage
+, fan speed) from lm-sensors.
+
+== Prerequisites
+
+=== Install lm-sensors
+
+lm-sensors provides the `sensors` command that our plugin uses to read hardware 
+monitoring chip data.
+
+[source,bash]
+----
+sudo dnf install -y lm_sensors
+----
+
+=== Detect and configure sensors
+
+After installation, detect your hardware monitoring chips:
+
+[source,bash]
+----
+sudo sensors-detect
+----
+
+Accept all defaults (press Enter or type `yes` / `Y`) for each prompt. This load
+s the required kernel modules.
+
+Reload the kernel modules:
+
+[source,bash]
+----
+sudo sensor-detect --auto-load-modules  # if available, otherwise:
+sudo systemctl restart lm_sensors
+# or manually:
+sudo modprobe -a coretemp nvme_core k10temp acpi_thermal_rel
+----
+
+Verify sensors are working:
+
+[source,bash]
+----
+sensors
+----
+
+You should see output listing all detected chips and their readings, for example
+:
+
+....
+coretemp-isa-0000
+Adapter: ISA adapter
+Package id 0:  +42.0°C  (high = +81.0°C, crit = +100.0°C)
+Core 0:        +39.0°C  (high = +81.0°C, crit = +100.0°C)
+Core 1:        +40.0°C  (high = +81.0°C, crit = +100.0°C)
+
+nvme-pci-0100
+Adapter: PCI adapter
+Composite:    +35.9°C  (low  = -273.0°C, high = +79.8°C)
+...
+....
+
+== Install the Cockpit Sensors Plugin
+
+=== Automatic install
+
+The repo includes a simplified setup script:
+
+[source,bash]
+----
+cd cockpit-sensors
+sudo ./install.sh
+----
+
+This will:
+
+1. Create `/usr/share/cockpit/sensors/` with all plugin files
+2. Install polkit policy (`org.cockpit_project.sensors_read.policy`) for sensor 
+read access
+3. Restart the cockpit.socket service
+
+=== Manual install
+
+If you prefer to install step-by-step:
+
+.Install the plugin into the Cockpit plugins directory:
+
+[source,bash]
+----
+sudo mkdir -p /usr/share/cockpit/sensors
+sudo cp manifest.json index.html index.js index.css /usr/share/cockpit/sensors/
+sudo cp org.cockpit_project.sensors_read.policy /usr/share/polkit-1/actions/org.
+cockpit_project.sensors_read.policy
+----
+
+.Restart Cockpit:
+
+[source,bash]
+----
+sudo systemctl restart cockpit.socket
+----
+
+== Usage
+
+Open https://localhost:9090 in a browser and click "Hardware Sensors" from the s
+idebar. The plugin displays an HTML table showing sensor readings with color-cod
+ed status indicators:
+
+* 🟢 Green (✔️) — Value within safe thresholds
+* ⚠️ Yellow (🔶) — Warning threshold exceeded  
+* 🔴 Red (❌) — Critical threshold exceeded
+
+The page auto-refreshes every 5 seconds with fresh readings.
+
+== Development
+
+=== Rebuild and deploy
+
+[source,bash]
+----
+make install
+# which runs:
+# sudo cp manifest.json index.html index.js index.css /usr/share/cockpit/sensors
+/
+----
+
+=== Run tests
+
+[source,bash]
+----
+npm test
+----
+
+== Troubleshooting
+
+*"Loading sensors → not-found"* — lm-sensors is not installed or `sensors` binar
+y is missing at `/usr/bin/sensors`.
+
+*White page with errors in browser console* — Check that polkit policy is deploy
+ed:
+
+[source,bash]
+----
+ls -la /usr/share/polkit-1/actions/org.cockpit_project.sensors_read.policy
+cat org.cockpit_project.sensors_read.policy  # should contain <allow_any>yes</al
+low_any> etc.
+sudo systemctl restart cockpit.socket
+----
+
+*Sensor readings not changing* — Hard refresh (Ctrl+Shift+R) the browser to clea
+r any stale cache.
+
+== Files
+
+|===
+|File|Description
+
+| `manifest.json` | Plugin manifest with metadata, menu config, and keywords
+| `index.html` | Plugin UI shell with cockpit framework refs
+| `index.js` | Main logic: sensor data fetching via cockpit.spawn, parsing, rend
+ering
+| `index.css` | Styles including dark mode support via design tokens
+| `install.sh` | Automated setup script (dnf + systemctl restart)
+| `cockpit-sensors.spec` | RPM spec for packaging the plugin
+| `org.cockpit_project.sensors_read.policy` | Polkit policy allowing sensor read
+ access
+| `Makefile` | Build helpers (make install, make test)
+|===
+
+== License
+
+LGPL-2.1-or-later OR MIT
