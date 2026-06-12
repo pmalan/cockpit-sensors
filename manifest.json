@@ -16,8 +16,7 @@
             ],
             "keywords": [
                 {
-                    "matches": ["sensor", "temperature", "hardware", "cpu", "nvm
-e", "thermal", "fan", "voltage", "lm_sensors"]
+                    "matches": ["sensor", "temperature", "hardware", "cpu", "nvme", "thermal", "fan", "voltage", "lm_sensors"]
                 }
             ]
         }
