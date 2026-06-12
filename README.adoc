@@ -31,10 +31,7 @@ Reload the kernel modules:
 
 [source,bash]
 ----
-sudo sensor-detect --auto-load-modules  # if available, otherwise:
 sudo systemctl restart lm_sensors
-# or manually:
-sudo modprobe -a coretemp nvme_core k10temp acpi_thermal_rel
 ----
 
 Verify sensors are working:
@@ -89,8 +86,7 @@ If you prefer to install step-by-step:
 ----
 sudo mkdir -p /usr/share/cockpit/sensors
 sudo cp manifest.json index.html index.js index.css /usr/share/cockpit/sensors/
-sudo cp org.cockpit_project.sensors_read.policy /usr/share/polkit-1/actions/org.
-cockpit_project.sensors_read.policy
+sudo cp org.cockpit_project.sensors_read.policy /usr/share/polkit-1/actions/org.cockpit_project.sensors_read.policy
 ----
 
 .Restart Cockpit:
@@ -124,20 +120,12 @@ make install
 /
 ----
 
-=== Run tests
-
-[source,bash]
-----
-npm test
-----
 
 == Troubleshooting
 
-*"Loading sensors → not-found"* — lm-sensors is not installed or `sensors` binar
-y is missing at `/usr/bin/sensors`.
+*"Loading sensors → not-found"* — lm-sensors is not installed or `sensors` binary is missing at `/usr/bin/sensors`.
 
-*White page with errors in browser console* — Check that polkit policy is deploy
-ed:
+*White page with errors in browser console* — Check that  org.cockpit_project.sensors_read.policy is deployed.
 
 [source,bash]
 ----
