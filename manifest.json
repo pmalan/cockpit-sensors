@@ -1,0 +1,30 @@
+{
+    "name": "sensors",
+    "requires": {
+        "cockpit": "266"
+    },
+    "priority": 90,
+    "menu": {
+        "index": {
+            "label": "Hardware Sensors",
+            "order": 50,
+            "docs": [
+                {
+                    "label": "lm-sensors project",
+                    "url": "https://hwmon.wiki.kernel.org/lm_sensors"
+                }
+            ],
+            "keywords": [
+                {
+                    "matches": ["sensor", "temperature", "hardware", "cpu", "nvm
+e", "thermal", "fan", "voltage", "lm_sensors"]
+                }
+            ]
+        }
+    },
+    "tools": {
+        "index": {
+            "label": "Hardware Sensors"
+        }
+    }
+}
