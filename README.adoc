@@ -21,7 +21,7 @@ After installation, detect your hardware monitoring chips:
 
 [source,bash]
 ----
-sudo sensors-detect
+sudo sensors-detect --auto
 ----
 
 Accept all defaults (press Enter or type `yes` / `Y`) for each prompt. This load
