@@ -1,0 +1,56 @@
+/* cockpit-sensors styles */
+
+#sensors-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 1rem;
+}
+#sensors-container h2 { font-size: 1.5rem; font-weight: 600; }
+.sensor-status-line { font-size: 0.875em; color: #6a6e73; margin-bottom: 0.5rem;
+ min-height: 1.25rem; }
+.sensor-output { display: flex; flex-direction: column; gap: 0.5em; }
+
+/* Sensor row */
+.sensor-line { display: flex; flex-wrap: wrap; align-items: center; font-size: 1
+rem; }
+.sensor-line td { padding-right: 1.25rem; }
+
+/* Status icons — same pattern across all three: unicode + CSS class, no inline 
+style */
+span.ok-icon   { color: #22863a !important; font-size: 1.2em; display: inline-bl
+ock; vertical-align: middle; margin-left: 0.375rem; }
+span.warn-icon { color: #f9a51d;              font-size: 1.2em; display: inline-
+block; vertical-align: middle; margin-left: 0.375rem; }
+span.crit-icon { color: #c00;                 font-size: 1.2em; display: inline-
+block; vertical-align: middle; margin-left: 0.375rem; }
+
+/* Dark mode — background */
+[data-theme~=dark] body {
+    background-color: var(--pf-t--global--background--color--main) !important;
+}
+#sensors-container,
+[data-theme~=dark] .chip-name,
+[data-theme~=dark] #sensor-body td {
+    color: var(--pf-t--global--text--color) !important;
+}
+
+/* Dark mode — status icons */
+[data-theme~=dark] span.ok-icon   { color: #3fae6a !important; }
+[data-theme~=dark] span.warn-icon { color: #ffc30b; }
+[data-theme~=dark] span.crit-icon { color: #ef4136; }
+
+/* Transitions */
+.sensor-line,
+.sensor-line .sensor-value,
+span.ok-icon,
+span.warn-icon,
+span.crit-icon {
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+@keyframes blink-warn {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+}
+.status-loading { animation: blink-warn 1.2s ease-in-out infinite; color: #6a6e7
+3;}
