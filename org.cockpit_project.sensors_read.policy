@@ -1,0 +1,15 @@
+<!--
+  Policy for cockpit-sensors plugin.
+  SPDX-License-Identifier: LGPL-2.1-or-later
+-->
+<policy>
+  <action id="org.cockpit_project.sensors_read">
+    <description>Read hardware sensor data</description>
+    <message>Authentication required to read hardware sensor data</message>
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+  </action>
+</policy>
